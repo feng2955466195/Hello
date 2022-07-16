@@ -1,0 +1,52 @@
+﻿<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>投票列表</TITLE>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+</HEAD>
+
+<BODY onbeforeunload="window.location='login.html'">
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile">您好，<span th:text="${user.uname}"></span> <SPAN class="return"><A
+            href="to_votelist?resetting=true">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="to_addsubject">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="to_votelist?update_key=true">编辑主题</A></SPAN>
+        <SPAN class="return"><A
+                href="logout">注销</A></SPAN></DIV>
+    <DIV class="search">
+        <FORM action="to_votelist" method="get"><INPUT name="keyword" class="input-text" type="text" th:value="${keyword}"><INPUT
+                name="submit" class="input-button" type="submit" value=""/>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="vote">
+    <H2>投票列表</H2>
+<!--    <DIV style="float: right;"><A href="http://localhost:8080/myVote/Subject-list?pageIndex=1">首页</A>-->
+<!--        | 上一页 | 下一页 | <A href="http://localhost:8080/myVote/Subject-list?pageIndex=1">末页</A>-->
+<!--    </DIV>-->
+<!--    <BR>-->
+    <UL class="list">
+        <LI class="odd" th:each="sbj:${page}">
+            <H4><A th:href="@{'FindSubject_Info' (sid=${sbj.sid})}"  th:text="${sbj.title}">主题名称</A>
+            </H4>
+            <DIV class="join">
+                <A th:if="${!update_key}" th:href="@{'/to_vote'(sid=${sbj.sid})}">我要参与</A>
+                <A th:if="${update_key}" th:href="@{'/to_update_subject'(sid=${sbj.sid})}">维护</A>
+                <A th:if="${update_key}"  onclick='return confirm("您确定删除此主题吗？"); ' th:href="@{'/del_subject'(sid=${sbj.sid})}" >删除</A>
+            </DIV>
+            <P class="info">共有 <span th:text="${sbj.chooses.size}">xxx</span> 个选项，已有 <span th:text="${sbj.user_count}">xxx</span> 个投票。</P></LI>
+    </UL>
+    <DIV style="float: right;"><a th:href="@{'/to_votelist'(index=1)}">首页</a>
+        | <a th:href="@{'/to_votelist'(index=${page.pageNum-1})}">上一页</a>
+        | <a th:href="@{'/to_votelist'(index=${page.pageNum+1})}">下一页</a>
+        | <a th:href="@{'/to_votelist'(index=${page.pages})}">尾页</a>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+
+</BODY>
+</HTML>

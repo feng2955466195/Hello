@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.dao.SubjectMapper">
+
+    <!--分页查询主题的Map-->
+    <resultMap id="FindPageSubject_map" type="cn.bdqn.pojo.Subject">
+            <id property="sid" column="sid" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="stype" column="stype" jdbcType="INTEGER"/>
+            <result property="del" column="del" jdbcType="INTEGER"/>
+            <result property="user_count" column="user_count" jdbcType="INTEGER"/>
+            <association property="chooses" column="sid" select="findchoose_by_sid"/>
+            <association property="user_choose_count" column="sid" select="find_user_choose_count"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sid,title,stype,
+        del
+    </sql>
+
+    <!--分页查询主题-->
+    <select id="FindPageSubject" resultMap="FindPageSubject_map">
+        select ifnull((select count(l.uid) from logsheet l where l.sid=s.sid and del=0),0) user_count,
+               s.title title,s.sid sid,s.stype stype from subject s,choose c
+            ${ew.customSqlSegment} and s.sid=c.sid and c.del=0 and s.del=0
+        group by s.sid
+    </select>
+
+    <!--通过主题sid查询选择数据Map-->
+    <resultMap id="FindChooseBySid" type="cn.bdqn.pojo.Choose">
+        <id column="cid" property="cid"/>
+        <association column="cid" property="user_count" select="FindInChooose_user_count"/>
+    </resultMap>
+
+
+    <!--通过主题id查询选择集合-->
+    <select id="findchoose_by_sid" resultMap="FindChooseBySid">
+        select * from choose where del=0 and sid=#{sid}
+    </select>
+
+    <!--通过选择id来获取该选择被选择的数量=user_count-->
+    <select id="FindInChooose_user_count" resultType="integer">
+        select count(1) user_count from logsheet where del=0 and cid=#{cid}
+    </select>
+
+    <!--通过主题sid来查询该主题下用户选择数量的总和=user_choose_count-->
+    <select id="find_user_choose_count" resultType="integer">
+        select count(1) user_choose_count from logsheet l where l.del=0 and l.sid=#{sid}
+    </select>
+
+
+
+</mapper>

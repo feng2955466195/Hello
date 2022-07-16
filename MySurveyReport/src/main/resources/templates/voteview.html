@@ -1,0 +1,65 @@
+﻿<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE></TITLE>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <SCRIPT type="text/javascript" src="js/jquery-1.8.3.min.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile">您好，<span th:text="${user.uname}"></span> <SPAN class="return"><A
+            href="to_votelist?resetting=true">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="to_addsubject">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="to_votelist?update_key=true">编辑主题</A></SPAN>
+        <SPAN class="return"><A
+                href="logout">注销</A></SPAN></DIV>
+    <DIV class="search">
+        <FORM action="to_votelist" method="get"><INPUT name="keyword" class="input-text" type="text" th:value="${keyword}"><INPUT
+                name="submit" class="input-button" type="submit" value=""/>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="vote">
+    <H2>查看投票</H2>
+    <UL class="list">
+        <LI>
+            <H4 th:text="${subject.title}"></H4>
+            <P class="info">共有 <span th:text="${subject.chooses.size}"></span> 个选项，已有 <span
+                    th:text="${subject.user_choose_count}"></span> 个投票。</P>
+            <OL>
+                <LI th:each="choose:${subject.chooses}">
+                    <span th:text="${choose.cname}">XXX</span>
+                    <DIV class="rate">
+                        <DIV class="ratebg">
+                            <DIV class="percent" th:if="${choose.user_count==0 or subject.user_choose_count==0}"
+                                 th:style="'width:'+'0.00%'"></DIV>
+                            <DIV class="percent" th:if="${choose.user_count!=0 and subject.user_choose_count!=0}"
+                                 th:style="'width:'+${choose.user_count}*100.00/${subject.user_choose_count}+'%'"></DIV>
+                        </DIV>
+                        <P><span th:text="${choose.user_count}">xx</span> 票
+                            (<span th:if="${choose.user_count==0 or subject.user_choose_count==0}">0.00%</span><span th:if="${choose.user_count!=0 and subject.user_choose_count!=0}"
+                                  th:text="${#numbers.formatDecimal(choose.user_count*100.00/subject.user_choose_count, 1, 2)}+'%'"></span> )</P>
+<!--                        ${#numbers.formatDecimal(choose.user_count*100.00/subject.user_choose_count, 1, 2)}-->
+<!--                        ${choose.user_count}*100.00/${subject.user_choose_count}-->
+                    </DIV>
+                </LI>
+            </OL>
+            <DIV class="goback"><A href="to_votelist">返回投票列表</A></DIV>
+        </LI>
+    </UL>
+</DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+
+<!--这是自己写的脚本-->
+<script>
+
+</script>
+
+
+</BODY>
+</HTML>

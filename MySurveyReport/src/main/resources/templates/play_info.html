@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<div id="header" class="wrap">
+    <img src="images/logo.gif">
+</div>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile">您好，<span th:text="${user.uname}"></span> <SPAN class="return"><A
+            href="to_votelist?resetting=true">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="to_addsubject">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="to_votelist?update_key=true">编辑主题</A></SPAN>
+        <SPAN class="return"><A
+                href="logout">注销</A></SPAN></DIV>
+    <DIV class="search">
+        <FORM action="to_votelist" method="get"><INPUT name="keyword" class="input-text" type="text" th:value="${keyword}"><INPUT
+                name="submit" class="input-button" type="submit" value=""/>
+        </FORM>
+    </DIV>
+</DIV>
+
+<div id="message" class="box">
+    <h2>提示信息</h2>
+    <div class="content">
+
+        <!--这里是投票结果-->
+        <p th:if="${target=='vote'}">
+            <span th:if="${!chance}">恭喜：投票成功!!!</span>
+            <span th:if="${chance}">您已经投票过了，不能重复投票哦!!!</span>
+            <br><a th:href="@{'FindSubject_Info'(sid=${sid})}">返回查看投票结果</a>&nbsp;
+                <a href="to_votelist?resetting=true">返回首页页面。。。</a>
+        </p>
+
+        <!--这里是点击新增主题发布时，不是管理员的提示！！！-->
+        <p th:if="${target=='no_admin'}">
+            <span >您的权限不足!!! 请联系管理员。。。</span>
+            <br><a href="to_votelist">返回首页页面。。。</a>
+        </p>
+
+        <!--这里是新增主题结果-->
+        <p th:if="${target=='add_sbj'}">
+            <span th:if="${add_sbj==1}">恭喜：发布标题成功!!!</span>
+            <span th:if="${add_sbj==-1}">该主题已存在!!!</span>
+            <span th:if="${add_sbj==-2}">新增选项不能小于2噢!!!</span>
+            <span th:if="${add_sbj==0}">系统操作有误。。。创建主题失败！请联系管理员或重试!!!</span>
+            <br><a href="to_votelist">返回首页页面。。。</a>&nbsp;<a href="to_addsubject">继续编辑新增主题。。。</a>
+        </p>
+
+        <!--这里是删除主题结果-->
+        <p th:if="${target=='del_subject'}">
+            <span th:if="${del_subject}">删除主题成功!!!</span>
+            <span th:if="${!del_subject}">系统操作有误。。。删除主题失败！请联系管理员或重试!!!</span>
+            <br><a href="to_votelist?update_key=true">继续编辑操作</a>&nbsp;
+                <a href="to_votelist?resetting=true">返回首页页面。。。</a>
+        </p>
+
+        <!--这里是修改主题结果-->
+        <p th:if="${target=='update_subject'}">
+            <span th:if="${update_subject==1}">修改主题成功!!!</span>
+            <span th:if="${update_subject==-2}">该主题除原主题名以外,存在重复!!!</span>
+            <span th:if="${update_subject==0}">你编辑的选项不能小于2!!!</span>
+            <span th:if="${update_subject==-1}">你的主题咋没有选项呢? 你是小烧饼还是大烧饼呢? (记得选项不能小于2)</span>
+            <br><a th:href="@{'to_update_subject'(sid=${sid})}">重新回到编辑主题。。。</a>&nbsp;
+            <a href="to_votelist?resetting=true">返回首页页面。。。</a>
+        </p>
+
+    </div>
+</div>
+<div id="footer" class="wrap">
+    北大青鸟 © 版权所有
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+﻿<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>发布新投票</TITLE>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <SCRIPT src="js/jquery-1.8.3.min.js" type="text/javascript"></SCRIPT>
+
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile">您好，<span th:text="${user.uname}"></span> <SPAN class="return"><A
+            href="to_votelist?resetting=true">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="to_addsubject">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="to_votelist?update_key=true">编辑主题</A></SPAN>
+        <SPAN class="return"><A
+                href="logout">注销</A></SPAN></DIV>
+
+</DIV>
+
+<!--新增主题  edit=add -->
+<DIV class="box" id="voteManage" th:if="${edit=='add'}">
+    <H2 >添加新投票</H2>
+    <DIV class="content">
+        <FORM  action="add_subject" method="post">
+            <DL>
+                <DT>投票内容：</DT>
+                <DD>
+                    <INPUT name="title" class="input-text" id="title" type="text">
+                </DD>
+                <DT>投票类型：</DT>
+                <DD><INPUT name="stype" type="radio" value="0">单选
+                    <INPUT name="stype" type="radio" value="1">多选
+                </DD>
+                <DT>投票选项：</DT>
+                <DD id="voteoptions">
+                    <P><INPUT name="cname" class="input-text" type="text" ></P>
+                    <P><INPUT name="cname" class="input-text" type="text" ></P>
+                </DD>
+                <DT></DT>
+                <DD class="button"><INPUT type="image" src="images/button_submit.gif">
+                    <A  href="javascript:;" id="add_option">增加选项</A>  <A href="to_votelist">取消操作</A>
+                </DD>
+            </DL>
+        </FORM>
+    </DIV>
+</DIV>
+
+
+<!--修改主题  edit=update -->
+<DIV class="box" id="voteManage" th:if="${edit=='update'}">
+    <H2 >修改投票</H2>
+    <DIV class="content">
+        <FORM  action="update_subject" method="post">
+            <DL>
+                <DT>投票内容：</DT>
+                <DD>
+                    <input type="hidden" name="sid" th:value="${subject.sid}">
+                    <input type="hidden" name="old_title" th:value="${subject.title}">
+                    <INPUT name="title" class="input-text" id="title" type="text" th:value="${subject.title}">
+                </DD>
+                <DT>投票类型：</DT>
+                <DD>
+                    <INPUT name="stype" type="radio" value="0" th:checked="${subject.stype==0}">单选
+                    <INPUT name="stype" type="radio" value="1" th:checked="${subject.stype==1}">多选
+                </DD>
+                <DT>投票选项：</DT>
+                <DD id="voteoptions">
+                    <P th:each="choose:${subject.chooses}">
+                        <INPUT name="cname" class="input-text" type="text" th:value="${choose.cname}">
+                        <input name="cid" class="input-text" type="hidden" th:value="${choose.cid}">
+                        <a href="javascript:;" class="del" onclick="del(this)">删除</a>
+                    </P>
+                </DD>
+                <DT></DT>
+                <DD class="button"><INPUT type="image" src="images/button_submit.gif">
+                    <A  href="javascript:;" id="add_option">增加选项</A>  <A href="to_votelist">取消操作</A>
+                </DD>
+            </DL>
+        </FORM>
+    </DIV>
+</DIV>
+
+
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+
+<!--脚本-->
+<script>
+    //工厂
+    $(function(){
+
+        //新增选项的点击事件（新增选项）
+        $("#add_option").click(function (){
+
+            var vote_options=document.getElementById("voteoptions");  //这是选项的父节点
+            // p>input+a
+            var p_=document.createElement("p"); //这是p标签
+            var input_1=document.createElement("input"); //这是选项input1
+            var input_2=document.createElement("input"); //这是选项input2
+            var a_=document.createElement("a"); //a标签
+
+            //设置属性
+            var $input1=$(input_1);
+            var $input2=$(input_2);
+            var $a=$(a_);
+            $input1.attr({"name":"cname","class":"input-text","type":"text"});
+            $input2.attr({"name":"cid","class":"input-text","type":"hidden","value":"0"});
+
+            $a.attr({"href":"javascript:;","class":"del","onclick":"del(this)"});
+            $a.text("删除");
+
+
+            //这是待加入的选项子节点拼接
+            p_.appendChild($input1.get(0));
+            p_.appendChild($input2.get(0));
+            p_.appendChild($a.get(0));
+            // alert(p_.innerHTML);
+            vote_options.appendChild(p_);
+
+        });
+
+        //点击删除选项节点 （删除选项）
+       del = function (a){
+            // alert("点击删除节点");
+            a.parentNode.remove(); //移除该选项的父节点
+        };
+
+        //表单提交时
+        $("form").submit(function (){
+            var title_input= $("input[name='title']"); //主题标题文本框
+            var stype_input=$("input[name='stype']"); //主题类型单选框
+            var option_input=$("input[name='cname']"); //选项文本框集合
+
+
+            if(title_input.val()==''){
+                alert("请输入主题标题!!!");
+                return false;
+            }else if(!stype_input.is(':checked')){
+                alert("请选择主题类型!!!");
+                return false;
+            }else{
+                //通过循环选项数组，来判断是否有选项为空！！！
+                var no_null=true;
+                option_input.each(function(j,item){
+                    // 你要实现的业务逻辑
+                    if (item.value==''){
+                        no_null=false;
+                    }
+                });
+                if (!no_null){
+                    alert("您有选项框未填写!!!");
+                    return  false;
+                }
+            }
+
+        });
+
+    })
+
+</script>
+</BODY>
+
+
+</HTML>

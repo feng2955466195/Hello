@@ -1,0 +1,95 @@
+﻿<HTML>
+<HEAD><META content="IE=11.0000" 
+http-equiv="X-UA-Compatible">
+ 
+<META http-equiv="Content-Type" content="text/html; charset=utf-8"> <TITLE>注   
+册</TITLE> <LINK href="css/style.css" rel="stylesheet" type="text/css">
+  <SCRIPT type="text/javascript" src="js/jquery-1.8.3.min.js">
+
+  </SCRIPT>
+ 
+<META name="GENERATOR" content="MSHTML 11.00.10586.420"></HEAD> 
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"> </DIV>
+<DIV class="wrap" id="navbar">
+<DIV class="search"><!--  
+		<form method="get" action="index.html">
+			<input type="text" name="keywords" class="input-text" /><input type="submit" name="submit" class="input-button" value="" />
+		</form>
+	-->	
+	</DIV></DIV>
+<DIV class="box" id="register">
+<H2>新用户注册</H2>
+<DIV class="content">
+<FORM action="reg" method="post">
+<DL>
+  <DT>用户名：</DT>
+  <DD><INPUT name="uname" class="input-text" id="userName"  type="text"/></DD>
+  <DT>密码：</DT>
+  <DD><INPUT name="password" class="input-text" id="password" type="password"/></DD>
+  <DT>确认密码：</DT>
+  <DD><INPUT name="password_again" class="input-text" id="repass" type="password"/></DD>
+  <DT></DT>
+  <DD><INPUT name="submit" class="input-button" type="submit" value=""/></DD></DL></FORM>
+<DIV class="error"></DIV>
+<DIV class="error"></DIV></DIV></DIV>
+<DIV class="wrap" id="footer">北大青鸟 © 版权所有 </DIV>
+
+<!--在这里编写脚本-->
+<script>
+  $(function(){
+
+    var uname=$("[name='uname']"); //用户名input
+    var password=$("[name='password']"); //密码input
+    var password_again=$("[name='password_again']"); //确认密码input
+    var exist=0;  //0：用户名未被占用  1：已被占用
+
+    uname.blur(function (){
+          //用户名框值失去焦点时（用于判断用户名是否已被占用）
+          $.post("exist_uname",{"uname":uname.val()},function (rs){
+            if (rs.exist>0){
+              alert("用户名已被占用!!!")
+              exist=1;
+            }else{
+              exist=0;
+            }
+          },"json")
+        })
+
+      //点击注册
+    $("form").submit(function(){
+      var uname_val=uname.val(); //用户名
+      var password_val=password.val(); //密码
+      var password_again_val=password_again.val(); //确认密码
+      if (exist>0){
+        alert("用户名已被占用!!!");
+        return false;
+      }else if(uname_val==''){
+        alert("请输入用户名!!!");
+        uname.focus(); //获得焦点
+        return false;
+      }else if (password_val==''){
+        alert("请输入密码!!!");
+        password.focus(); //获得焦点
+        return false;
+      }else if (password_again_val==''){
+        alert("请确认密码!!!");
+        password_again.focus(); //获得焦点
+        return false;
+      }else if (password_again_val!=password_val){
+        alert("前后密码不一致!!!");
+        password_again.focus(); //获得焦点
+        return false;
+      }
+
+      //一切正常，执行注册！！！
+
+      return true;
+
+
+    })
+
+  })
+</script>
+
+</BODY></HTML>

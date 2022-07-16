@@ -1,0 +1,38 @@
+
+spring:
+  #这里是模板设置
+  thymeleaf:
+    #编码
+    encoding: UTF-8
+    #开发时关闭缓存(模板只加载一次),不然没法看到实时页面需要重构或重启
+    cache: false
+
+  #这是配置数据源
+  datasource:
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    #    url: jdbc:mysql:///test?serverTimezone=GMT
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql:///survey_report?serverTimezone=GMT
+    username: root
+    password: 123
+
+
+
+#这里是配置mybatis
+mybatis:
+  type-aliases-package: cn.bdqn.pojo     #比如，在mapper.xml文件中的实体对象导入
+  mapper-locations: classpath:/mapper/**    #映射文件路径
+  configuration:
+    auto-mapping-behavior: full
+    use-generated-keys: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    map-underscore-to-camel-case: false   #默认true开启驼峰命名
+#  global-config:
+#    db-config:
+#      id-type: auto			  #主键自增
+#      table-underline: false  #默认true开启驼峰命名
+#      table-prefix: tbl_      #表名前缀
+#这是分页插件配置
+pagehelper:
+  reasonable: true
+  pageSizeZero: true

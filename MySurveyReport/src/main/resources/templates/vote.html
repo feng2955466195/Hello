@@ -1,0 +1,67 @@
+﻿<HTML>
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>参与投票</TITLE>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <SCRIPT type="text/javascript" src="js/jquery-1.8.3.min.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile">您好，<span th:text="${user.uname}"></span> <SPAN class="return"><A
+            href="to_votelist?resetting=true">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="to_addsubject">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="to_votelist?update_key=true">编辑主题</A></SPAN>
+        <SPAN class="return"><A
+                href="logout">注销</A></SPAN></DIV>
+</DIV>
+<DIV class="wrap" id="vote">
+    <H2>参与投票</H2>
+    <UL class="list">
+        <LI>
+            <H4 th:text="${subject.title}">XXXXX</H4>
+            <P class="info">共有 <span th:text="${subject.chooses.size}">XX</span> 个选项，已有 <span th:text="${subject.user_choose_count}">XX</span> 个投票。</P>
+            <FORM action="addlogsheet" method="post"><INPUT name="entityId" type="hidden" value="1">
+                <INPUT name="sid" type="hidden" th:value="${subject.sid}">
+<!--                <INPUT name="token" type="hidden" value="4UDEDKPAXYKC1PTLWA2OMZGQ925VSGDB">-->
+
+                <OL>
+                    <LI th:if="${subject.stype==0}" th:each="choose:${subject.chooses}"><INPUT name="options" type="radio" th:value="${choose.cid}" ><span th:text="${choose.cname}"></span></LI>
+                    <LI th:if="${subject.stype!=0}" th:each="choose:${subject.chooses}"><INPUT name="options" type="checkbox" th:value="${choose.cid}" ><span th:text="${choose.cname}"></span></LI>
+                </OL>
+                <P class="voteView">
+                    <INPUT type="image" src="images/button_vote.gif"/>
+                    <A th:href="@{'/FindSubject_Info'(sid=${subject.sid})}"><IMG
+                        src="images/button_view.gif"/></A></P></FORM>
+        </LI>
+    </UL>
+</DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+
+<!--自己写的脚本-->
+<script>
+    //工厂
+    $(function(){
+
+        // alert(options.val());
+        $("form").submit(function (){
+            //判断是否有选择
+            var options=$("input[name='options']");  //获取到选择框的集合
+            // alert(options.is(':checked'));
+            if (!options.is(':checked')){//如果未做选择
+                alert("您还未做选择哦~~~");
+                return false;
+            }
+
+
+        })
+    })
+
+</script>
+</BODY>
+</HTML>

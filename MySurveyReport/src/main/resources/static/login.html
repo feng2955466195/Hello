@@ -1,0 +1,95 @@
+﻿<HTML>
+<HEAD><META content="IE=11.0000" 
+http-equiv="X-UA-Compatible">
+ 
+<META http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+<TITLE></TITLE> <LINK href="css/style.css" rel="stylesheet" 
+type="text/css"> 
+<SCRIPT type="text/javascript" src="js/jquery-1.8.3.min.js">
+window.onload = function(){
+	var input = document.getElementById("loginBox").getElementsByTagName("input");
+	for(i=0; i<input.length; i++) {
+		var type = input[i].getAttribute("type");
+		if(type == "text" || type == "password") {
+			input[i].onfocus = function(){
+				this.className += " input-text-over";
+			}
+			input[i].onblur = function(){
+				this.className = this.className.replace(/input-text-over/, "");
+			}
+		} else if(type == "submit") {
+			input[i].onmouseover = function(){
+				this.className += " input-submit-over";
+			}
+			input[i].onmouseout = function(){
+				this.className = this.className.replace(/input-button-over/, "");
+			}
+		}
+	}
+}
+</SCRIPT>
+ 
+<META name="GENERATOR" content="MSHTML 11.00.10586.420"></HEAD> 
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"> </DIV>
+<DIV class="wrap" id="login">
+<DIV class="main">
+<DIV class="corner"></DIV>
+<DIV class="introduce">
+<H2>北大青鸟</H2>
+<P>网上调查系统...</P></DIV>
+<DIV class="login">
+<H2>用户登录</H2>
+<FORM action="login" method="post">
+<DL id="loginBox">
+  <DT>用户名：</DT>
+  <DD><INPUT name="uname" class="input-text" type="text"></DD>
+  <DT>密　码：</DT>
+  <DD><INPUT name="password" class="input-text" type="password"></DD>
+  <DT></DT>
+  <DD><INPUT name="submit" id="to_login" class="input-button" type="submit" value="登录"> <A
+  href="regist.html">新用户注册</A></DD></DL></FORM>
+<DIV class="error"></DIV></DIV></DIV></DIV>
+<DIV class="wrap"></DIV>
+<DIV class="wrap" id="footer">	北大青鸟 © 版权所有 </DIV>
+
+<!--在这里编写脚本-->
+<script type="text/javascript" >
+  $(function(){
+    // alert("进入工厂。。。");
+    $("form").submit(function(){
+      // alert("点击提交");
+      var uname=$("[name='uname']");
+      var password=$("[name='password']");
+      // alert(uname.val()+"===="+password.val());
+
+      //判断输入是否为空
+      if(uname.val()==''){
+        $(".error").text("用户名不能为空!!!");
+        return false;
+      }else if(password.val()==''){
+        $(".error").text("密码不能为空!!!");
+        return false;
+      }
+
+      $.post("login",{"uname":uname.val(),"password":password.val()},function(rs){
+            // alert(rs.user.uname);
+        if (rs.key==1){
+          alert("登录成功！！ 用户: "+rs.user.uname);
+          location.href="to_votelist";
+        }else if(rs.key==0){
+          $(".error").text("用户名或密码错误!!!");
+        }else if(rs.key==-1){
+          $(".error").text("该用户已经被占用!!!");
+        }
+      },"json");
+
+      return false;
+    })
+  })
+
+</script>
+
+
+</BODY></HTML>
+
